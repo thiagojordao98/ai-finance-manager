@@ -22,21 +22,14 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build args para variáveis necessárias durante o build
-ARG DATABASE_URL
-ARG NEON_AUTH_BASE_URL
-ARG NEXT_PUBLIC_APP_URL
-ARG EVOLUTION_API_URL
-ARG EVOLUTION_API_KEY
-ARG EVOLUTION_INSTANCE
-
-# Converter build args em env vars para o build
-ENV DATABASE_URL=$DATABASE_URL
-ENV NEON_AUTH_BASE_URL=$NEON_AUTH_BASE_URL
-ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
-ENV EVOLUTION_API_URL=$EVOLUTION_API_URL
-ENV EVOLUTION_API_KEY=$EVOLUTION_API_KEY
-ENV EVOLUTION_INSTANCE=$EVOLUTION_INSTANCE
+# Variáveis de build - valores placeholder para permitir o build
+# Os valores reais vêm das variáveis de ambiente em runtime
+ENV DATABASE_URL="postgresql://placeholder:placeholder@placeholder/placeholder"
+ENV NEON_AUTH_BASE_URL="https://placeholder.neonauth.aws.neon.tech/placeholder/auth"
+ENV NEXT_PUBLIC_APP_URL="https://placeholder.com"
+ENV EVOLUTION_API_URL="https://placeholder.com"
+ENV EVOLUTION_API_KEY="placeholder"
+ENV EVOLUTION_INSTANCE="placeholder"
 
 # Variáveis de build
 ENV NEXT_TELEMETRY_DISABLED=1
