@@ -24,11 +24,11 @@ export function formatPhoneForEvolution(phone: string): string {
 }
 
 /**
- * Extracts clean phone number from various formats
- * Input: (84) 8899-2141 or +55 84 8899-2141 or 558488992141
- * Output: 558488992141
+ * Extracts clean phone number from various formats and REMOVES 9th digit
+ * Input: (84) 98899-2141 or +55 84 98899-2141 or 5584988992141
+ * Output: 558488992141 (without the 9)
  *
- * NOTE: Não adiciona o 9º dígito automaticamente
+ * NOTE: Remove o 9º dígito automaticamente para compatibilidade
  */
 export function cleanPhoneNumber(phone: string): string {
   // Remove all non-numeric characters
@@ -39,7 +39,14 @@ export function cleanPhoneNumber(phone: string): string {
     cleaned = '55' + cleaned;
   }
 
-  // Do NOT add 9th digit
+  // Remove 9th digit if present (Brazilian mobile format)
+  // Format: 55 + DDD (2 digits) + 9 + number (8 digits) = 13 digits
+  // We want: 55 + DDD (2 digits) + number (8 digits) = 12 digits
+  if (cleaned.length === 13 && cleaned.charAt(4) === '9') {
+    // Remove the 9 at position 4 (after country code 55 + 2-digit DDD)
+    cleaned = cleaned.slice(0, 4) + cleaned.slice(5);
+  }
+
   return cleaned;
 }
 
@@ -53,13 +60,15 @@ export function normalizePhoneForStorage(phone: string): string {
 }
 
 /**
- * Validates if phone number has correct format
+ * Validates if phone number has correct format (accepts with or without 9th digit)
  * Expected: 55 + DDD (2 digits) + number (8-9 digits) = 12-13 digits total
  */
 export function isValidBrazilianPhone(phone: string): boolean {
-  const cleaned = cleanPhoneNumber(phone);
+  const cleaned = phone.replace(/\D/g, '');
+  // Add country code if missing
+  const withCountry = cleaned.startsWith('55') ? cleaned : '55' + cleaned;
   // Brazilian phones: 55 + 2 digit DDD + 8-9 digit number = 12-13 digits
-  return /^55\d{10,11}$/.test(cleaned);
+  return /^55\d{10,11}$/.test(withCountry);
 }
 
 /**

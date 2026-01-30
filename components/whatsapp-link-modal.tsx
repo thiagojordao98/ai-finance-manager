@@ -52,16 +52,20 @@ export function WhatsAppLinkModal({
 
   if (!isOpen) return null;
 
-  // Format phone as user types: (XX) XXXXX-XXXX
+  // Format phone as user types: (XX) XXXXX-XXXX or (XX) XXXX-XXXX
   const formatPhoneDisplay = (value: string): string => {
     const digits = value.replace(/\D/g, "");
 
     if (digits.length <= 2) {
       return digits.length ? `(${digits}` : "";
     }
-    if (digits.length <= 7) {
+    if (digits.length <= 6) {
       return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
     }
+    if (digits.length <= 10) {
+      return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6, 10)}`;
+    }
+    // With 9th digit: (XX) XXXXX-XXXX
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
   };
 
