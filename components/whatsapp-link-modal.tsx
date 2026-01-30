@@ -181,7 +181,7 @@ export function WhatsAppLinkModal({
                   id="phone"
                   value={phone}
                   onChange={handlePhoneChange}
-                  placeholder="(84) 98899-2141"
+                  placeholder="(11) 98888-8888"
                   className="w-full px-4 py-3 bg-gray-950 border border-gray-800 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-lg tracking-wide"
                   disabled={loading}
                   autoComplete="tel"
