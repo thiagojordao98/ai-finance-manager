@@ -25,41 +25,27 @@ export function formatPhoneForEvolution(phone: string): string {
 
 /**
  * Extracts clean phone number from various formats
- * Input: (84) 98899-2141 or +55 84 98899-2141 or 5584988992141
- * Output: 5584988992141
- * 
- * Also normalizes Brazilian mobile numbers:
- * - Old format (8 digits): 55 84 96843647 → 55 84 996843647 (adds 9)
- * - New format (9 digits): 55 84 996843647 → unchanged
+ * Input: (84) 8899-2141 or +55 84 8899-2141 or 558488992141
+ * Output: 558488992141
+ *
+ * NOTE: Não adiciona o 9º dígito automaticamente
  */
 export function cleanPhoneNumber(phone: string): string {
   // Remove all non-numeric characters
   let cleaned = phone.replace(/\D/g, '');
-  
+
   // If number doesn't start with country code (55), add it
   if (!cleaned.startsWith('55') && cleaned.length <= 11) {
     cleaned = '55' + cleaned;
   }
-  
-  // Normalize Brazilian mobile numbers to always have 9 digits
-  // Format: 55 + DDD(2) + number(8 or 9)
-  // If it has 12 digits (55 + 2 + 8), add the 9 prefix to make it 13
-  if (cleaned.length === 12 && cleaned.startsWith('55')) {
-    const ddd = cleaned.slice(2, 4);
-    const number = cleaned.slice(4);
-    // Brazilian mobile numbers should start with 9 and have 9 digits
-    // If it's 8 digits and looks like a mobile (starts with 6,7,8,9), add the 9
-    if (/^[6-9]/.test(number)) {
-      cleaned = `55${ddd}9${number}`;
-    }
-  }
-  
+
+  // Do NOT add 9th digit
   return cleaned;
 }
 
 /**
  * Normalizes a phone number for consistent storage/comparison
- * Always returns format: 5584996843647@s.whatsapp.net
+ * Always returns format: 558488992141@s.whatsapp.net
  */
 export function normalizePhoneForStorage(phone: string): string {
   const cleaned = cleanPhoneNumber(phone.replace('@s.whatsapp.net', ''));

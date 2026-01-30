@@ -47,9 +47,8 @@ BEGIN
 END $$;
 
 -- ============================================
--- 5.5) Function: Normalize Brazilian phone numbers
--- Converts 8-digit mobile to 9-digit format
--- Input: 558496843647@s.whatsapp.net → Output: 5584996843647@s.whatsapp.net
+-- 5.5) Function: Normalize phone numbers
+-- Keeps digits as provided (no 9th digit insertion)
 -- ============================================
 CREATE OR REPLACE FUNCTION public.normalize_phone(p_phone text)
 RETURNS text
@@ -57,8 +56,6 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
   v_clean text;
-  v_ddd text;
-  v_number text;
 BEGIN
   -- Remove @s.whatsapp.net suffix if present
   v_clean := regexp_replace(p_phone, '@s\.whatsapp\.net$', '');
@@ -66,16 +63,7 @@ BEGIN
   -- Remove all non-numeric characters
   v_clean := regexp_replace(v_clean, '[^0-9]', '', 'g');
   
-  -- If it's 12 digits (55 + 2 DDD + 8 number), normalize to 13 (add 9)
-  IF length(v_clean) = 12 AND v_clean LIKE '55%' THEN
-    v_ddd := substring(v_clean from 3 for 2);
-    v_number := substring(v_clean from 5);
-    -- If number starts with 6,7,8,9 it's a mobile - add 9 prefix
-    IF v_number ~ '^[6-9]' THEN
-      v_clean := '55' || v_ddd || '9' || v_number;
-    END IF;
-  END IF;
-  
+  -- Do NOT add 9th digit
   RETURN v_clean || '@s.whatsapp.net';
 END;
 $$;
