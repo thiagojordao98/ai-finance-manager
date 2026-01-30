@@ -1,4 +1,3 @@
-# ================================
 # Dashboard Financeiro - Dockerfile
 # Multi-stage build otimizado para produção
 # ================================
@@ -21,6 +20,9 @@ WORKDIR /app
 # Copiar dependências do stage anterior
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Garantir que a pasta public existe
+RUN mkdir -p public
 
 # Variáveis de build - valores placeholder para permitir o build
 # Os valores reais vêm das variáveis de ambiente em runtime
@@ -53,9 +55,11 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 # Copiar arquivos necessários do build
-COPY --from=builder /app/public ./public
+# Usar shell para lidar com pasta public opcional
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+RUN mkdir -p public
+COPY --from=builder /app/public/. ./public/ 2>/dev/null || true
 
 # Ajustar permissões
 RUN chown -R nextjs:nodejs /app
@@ -68,7 +72,7 @@ EXPOSE 3000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider https://financeai.tjmcpro.com/ || exit 1
+    CMD wget --no-verbose --tries=1 --spider https://localhost:3000/ || exit 1
 
 # Iniciar aplicação
 CMD ["node", "server.js"]
