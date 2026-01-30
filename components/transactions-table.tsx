@@ -2,6 +2,7 @@ import { TrendingUp, TrendingDown, Plus } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Transaction } from "@/db/schema";
 import { AddTransactionButton } from "./add-transaction-button";
+import { TransactionDeleteButton } from "./transaction-delete-button";
 
 interface TransactionsTableProps {
   transactions: Transaction[];
@@ -43,6 +44,9 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Valor
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
+                  Ações
                 </th>
               </tr>
             </thead>
@@ -92,6 +96,12 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                       {transaction.type === "entrada" ? "+" : "-"}
                       {formatCurrency(parseFloat(transaction.amount))}
                     </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <TransactionDeleteButton
+                      transactionId={transaction.id}
+                      description={transaction.description}
+                    />
                   </td>
                 </tr>
               ))}
