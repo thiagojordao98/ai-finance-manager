@@ -6,6 +6,8 @@ export default neonAuthMiddleware({
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|api/auth|auth).*)",
+    // Protect /dashboard and other routes, but allow root / to be public
+    "/dashboard/:path*",
+    "/((?!_next/static|_next/image|favicon.ico|api/auth|auth|$)(?!^/$).*)",
   ],
 };
