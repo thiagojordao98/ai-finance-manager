@@ -26,7 +26,7 @@ export function SignInForm() {
         password: formData.password,
         fetchOptions: {
           onSuccess: () => {
-            router.push("/");
+            router.push("/dashboard");
             router.refresh();
           },
           onError: (ctx) => {

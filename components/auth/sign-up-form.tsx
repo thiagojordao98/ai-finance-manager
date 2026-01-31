@@ -39,7 +39,7 @@ export function SignUpForm() {
         name: formData.name,
         fetchOptions: {
           onSuccess: () => {
-            router.push("/");
+            router.push("/dashboard");
             router.refresh();
           },
           onError: (ctx) => {
