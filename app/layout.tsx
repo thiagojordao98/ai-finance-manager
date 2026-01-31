@@ -6,8 +6,9 @@ import { NeonAuthProvider } from "@/components/neon-auth-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Dashboard Financeiro",
-  description: "Controle suas finanças com inteligência",
+  title: "Dashboard Financeiro - Controle pelo WhatsApp",
+  description:
+    "Controle suas finanças de forma simples pelo WhatsApp. Registre transações em segundos e acompanhe tudo em um dashboard profissional.",
 };
 
 export default function RootLayout({
