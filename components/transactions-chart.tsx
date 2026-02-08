@@ -51,9 +51,10 @@ export function TransactionsChart({ transactions }: TransactionsChartProps) {
       // Sort by date
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
-      return dateA.getTime() - dateB.getTime();
+      return dateB.getTime() - dateA.getTime();
     })
-    .slice(-period); // Last N days based on selected period
+    .slice(0, period) // First N days (most recent)
+    .reverse(); // Show from oldest to newest
 
   if (chartData.length === 0) {
     return (
